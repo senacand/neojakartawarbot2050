@@ -130,10 +130,10 @@ async function step() {
 
 function generateMessage(time, attackerName, cityName, previousOwner, previousOwnerDisappear) {
     const messages = [
-        `${time}, ${attackerName} menjajah ${cityName}${(previousOwner) ? ` yang sebelumnya dijajah oleh ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\n${previousOwnerDisappear} telah lenyap ditelan bumi. 💥` : ''}`,
-        `Pada bulan ${time}, ${attackerName} berhasil mencuri${(previousOwner) ? `` : ` hati`} ${cityName}${(previousOwner) ? ` dari ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\n${previousOwnerDisappear} sakit hati karena NTR dan menghilang. 😭` : ''}`,
-        `${time}, ${attackerName} mengambil alih ${cityName}${(previousOwner) ? ` dari ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\n${previousOwnerDisappear} telah terkalahkan dalam peperangan. 🔫` : ''}`,
-        `${time}, ${attackerName} menduduki ${cityName}${(previousOwner) ? ` yang sebelumnya diduduki oleh ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\n${previousOwnerDisappear} telah terkalahkan.` : ''}`,
+        `${time}, ${attackerName} menjajah Neo ${cityName}${(previousOwner) ? ` yang sebelumnya dijajah oleh Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah lenyap ditelan bumi. 💥` : ''}`,
+        `Pada bulan ${time}, Neo ${attackerName} berhasil mencuri${(previousOwner) ? `` : ` hati`} Neo ${cityName}${(previousOwner) ? ` dari Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} sakit hati karena NTR dan menghilang. 😭` : ''}`,
+        `${time}, Neo ${attackerName} mengambil alih Neo ${cityName}${(previousOwner) ? ` dari Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah terkalahkan dalam peperangan. 🔫` : ''}`,
+        `${time}, Neo ${attackerName} menduduki Neo ${cityName}${(previousOwner) ? ` yang sebelumnya diduduki oleh Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah terkalahkan.` : ''}`,
     ]
 
     return messages[getRandomInt(0, messages.length-1)];
