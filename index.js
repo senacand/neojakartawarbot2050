@@ -10,7 +10,7 @@ require('dotenv').config();
 const fbAccessToken = process.env.FB_ACCESS_TOKEN;
 const fbPageId = process.env.FB_PAGE_ID;
 const imgurClientId = process.env.IMGUR_CLIENT_ID;
-const startTime = process.env.START_TIME;
+// const startTime = process.env.START_TIME;
 FB.setAccessToken(fbAccessToken);
 imgur.setClientId(imgurClientId);
 
@@ -64,17 +64,17 @@ function runStepClock() {
     const date = new Date();
     const minutesLeft = 60 - date.getUTCMinutes();
     setTimeout(() => {
-        if(isGameEnded) {
+        if(isGameEnded()) {
             console.log('Game has ended');
             runStepClock();
             return;
         }
         const time = new Date().getTime();
-        if(time < startTime) {
-            console.log('Not yet!');
-            runStepClock();
-            return;
-        }
+        // if(time < startTime) {
+        //     console.log('Not yet!');
+        //     runStepClock();
+        //     return;
+        // }
         step();
     }, minutesLeft*60*1000);
 }
