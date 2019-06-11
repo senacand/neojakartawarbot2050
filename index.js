@@ -101,17 +101,17 @@ async function step() {
         }
     } while(attackedCityId == null || attackerCityId == null);
 
-    const attacker = progress[attackerCityId].owner;
-    const attacked = progress[attackedCityId].owner;
-    const attackedCity = citiesCache[attackedCityId];
-    const attackedOriginCity = citiesCache[progress[attacked].owner];
-    const attackerOriginCity = citiesCache[progress[attacker].owner];
+    const attacker = progress[attackerCityId].owner; // The ID of the one who attacks the city
+    const attacked = progress[attackedCityId].owner; // The ID of the one who owns the city that's being attacked
+    const attackedCity = citiesCache[attackedCityId]; // The city being attacked
+    const attackedOriginCity = citiesCache[attacked]; // The detailed information of the one who owns the city that's being attacked
+    const attackerOriginCity = citiesCache[attacker]; // The detailed information of the attacker
     
-    progress[attackedCityId].owner = attacker;
+    progress[attackedCityId].owner = attacker; // Sets the owner of the attacked city to the attacker
 
     // Updates progress cache
-    progressCache[attacked] = progressCache[attacked].filter((cityId) => cityId != attackedCityId);
-    progressCache[attacker].push(attackedCityId);
+    progressCache[attacked] = progressCache[attacked].filter((cityId) => cityId != attackedCityId); // Removes the city from ownership
+    progressCache[attacker].push(attackedCityId); // Add city to ownership
 
     var message = generateMessage(
         getTime(++progressTime), 
