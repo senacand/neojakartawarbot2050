@@ -89,15 +89,11 @@ async function step() {
         const city = cities[index];
         const neighbours = city.neighbours;
 
-        var possibleAttackerCities = [];
-        for(var i=0; i<neighbours.length; i++) {
-            if(progress[neighbours[i]].owner != progress[city.id].owner) possibleAttackerCities.push(neighbours[i]);
-        }
+        var possibleCitiesToAttack = neighbours.filter((neighbourId) => progress[neighbourId].owner != progress[city.id].owner);
 
-        if(possibleAttackerCities.length > 0) {
-            const attackerIndex = getRandomInt(0, possibleAttackerCities.length-1);
-            attackedCityId = city.id;
-            attackerCityId = possibleAttackerCities[attackerIndex];
+        if(possibleCitiesToAttack.length > 0) {
+            attackedCityId = possibleCitiesToAttack[getRandomInt(0, possibleCitiesToAttack.length-1)];
+            attackerCityId = city.id;
         }
     } while(attackedCityId == null || attackerCityId == null);
 
