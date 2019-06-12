@@ -184,16 +184,22 @@ async function updateMap(changedCity) {
 // Upload to Facebook
 async function uploadToFacebook(message) {
     const cityOwnership = getSortedCityOwnership();
-    var comments = "Jumlah Kota Yang Dijajah:";
+    var comments = "Jajahan:";
     var count = 0;
     cityOwnership.forEach((owner) => {
         if(owner.total <= 0) return;
-        comments += `\n${++count}. ${owner.city.name} (${owner.total})`;
+        const ownedCities = progressCache[owner.city.id]
+            .map((cityId) => citiesCache[cityId].name )
+            .join(', ');
+        comments += `\n${++count}. ${owner.city.name}: ${ownedCities}`;
     })
 
     try {
         const imageUrl = await imgur.uploadFile("outputs/map.png")
-            .then((json) => json.data.link);
+            .then((json) => {
+                console.log(json.data.link);
+                return json.data.link;
+            });
 
         FB.api(
             "/" + fbPageId + "/photos",
