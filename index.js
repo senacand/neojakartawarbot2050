@@ -160,9 +160,6 @@ async function updateMap(changedCity) {
         const owner = citiesCache[progress[city.id].owner];
         const ownerColor = owner.color;
         floodFill(Math.floor(city.x), Math.floor(city.y), ctx, ownerColor.r, ownerColor.g, ownerColor.b);
-        ctx.fillStyle = 'black';
-        ctx.font = '30px Montserrat';
-        ctx.textAlign = 'center';
     });
 
     // Add target image into changed city
@@ -170,6 +167,10 @@ async function updateMap(changedCity) {
 
     // Write city names
     cities.forEach((city) => {
+        if(city.id == progress[city.id].owner) ctx.fillStyle = "white"
+        else ctx.fillStyle = "black";
+        ctx.font = '30px Montserrat';
+        ctx.textAlign = 'center';
         const names = city.name.split(' ');
         names.forEach((name, index) => {
             ctx.fillText(name, city.x, city.y + index*30);
