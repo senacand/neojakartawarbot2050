@@ -49,6 +49,7 @@ if(fs.existsSync('outputs/progress.json')) {
 
 // Cache cities owned by city ID of the owner to allow O(1) search
 var progressCache = {};
+cities.forEach((city) => { progressCache[city.id] = []; })
 cities.forEach((city) => {
     const owner = progress[city.id].owner;
     if(progressCache[owner] == null) progressCache[owner] = [];
@@ -125,14 +126,17 @@ async function step() {
 }
 
 function generateMessage(time, attackerName, cityName, previousOwner, previousOwnerDisappear) {
-    const messages = [
+    const template = [
         `${time}, Neo ${attackerName} menjajah Neo ${cityName}${(previousOwner) ? ` yang sebelumnya dijajah oleh Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah lenyap ditelan bumi. 💥` : ''}`,
         `Pada bulan ${time}, Neo ${attackerName} berhasil mencuri${(previousOwner) ? `` : ` hati`} Neo ${cityName}${(previousOwner) ? ` dari Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} sakit hati karena NTR dan menghilang. 😭` : ''}`,
         `${time}, Neo ${attackerName} mengambil alih Neo ${cityName}${(previousOwner) ? ` dari Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah terkalahkan dalam peperangan. 🔫` : ''}`,
         `${time}, Neo ${attackerName} menduduki Neo ${cityName}${(previousOwner) ? ` yang sebelumnya diduduki oleh Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah terkalahkan.` : ''}`,
     ]
 
-    return messages[getRandomInt(0, messages.length-1)];
+    var message = template[getRandomInt(0, template.length-1)];
+    if(isGameEnded()) message += `\nPerang Neo Jakarta telah berakhir. ${attackerName} berhasil menguasai seluruh Neo Jakarta.`;
+
+    return message;
 }
 
 function isGameEnded() {
@@ -167,12 +171,20 @@ async function updateMap(changedCity) {
 
     // Write city names
     cities.forEach((city) => {
+        var shouldStroke = false;
         if(city.id == progress[city.id].owner) ctx.fillStyle = "white"
+        else if(progressCache[city.id].length > 0) {
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 5;
+            ctx.fillStyle = rgbToHex(city.color.r, city.color.g, city.color.b);
+            shouldStroke = true;
+        }
         else ctx.fillStyle = "black";
         ctx.font = '30px Montserrat';
         ctx.textAlign = 'center';
         const names = city.name.split(' ');
         names.forEach((name, index) => {
+            if(shouldStroke) ctx.strokeText(name, city.x, city.y + index*30);
             ctx.fillText(name, city.x, city.y + index*30);
         });
     })
@@ -311,4 +323,19 @@ function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function rgbToHex(r,g,b) {   
+    var red = numberToHex(r);
+    var green = numberToHex(g);
+    var blue = numberToHex(b);
+    return "#"+red+green+blue;
+}
+
+function numberToHex(number) { 
+    var hex = Number(number).toString(16);
+    if (hex.length < 2) {
+         hex = "0" + hex;
+    }
+    return hex;
 }
