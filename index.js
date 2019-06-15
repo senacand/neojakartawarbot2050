@@ -10,6 +10,10 @@ require('dotenv').config();
 const fbAccessToken = process.env.FB_ACCESS_TOKEN;
 const fbPageId = process.env.FB_PAGE_ID;
 const imgurClientId = process.env.IMGUR_CLIENT_ID;
+const debug = process.env.DEBUG;
+
+if(debug) console.log("[WARNING] RUNNING IN DEBUG MODE");
+
 // const startTime = process.env.START_TIME;
 FB.setAccessToken(fbAccessToken);
 imgur.setClientId(imgurClientId);
@@ -59,7 +63,8 @@ cities.forEach((city) => {
 // Loads font
 registerFont('assets/Montserrat.ttf', { family: 'Montserrat' })
 
-runStepClock();
+if(!debug) runStepClock()
+else step(); // Do one step when run instead of waiting for minute 00 (For Debugging purposes)
 
 function runStepClock() {
     const date = new Date();
@@ -134,6 +139,7 @@ function generateMessage(time, attackerName, cityName, previousOwner, previousOw
     ]
 
     var message = template[getRandomInt(0, template.length-1)];
+    if(debug) message = "[DEBUG]\n\n" + message;
     if(isGameEnded()) message += `\nPerang Neo Jakarta telah berakhir. ${attackerName} berhasil menguasai seluruh Neo Jakarta.`;
 
     return message;
