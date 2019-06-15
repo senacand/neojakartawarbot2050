@@ -229,16 +229,16 @@ async function uploadToFacebook(message) {
             },
             function (response) {
                 console.log(response);
-                FB.api(
-                    "/" + response.id + "/comments",
-                    "POST",
-                    {
-                        "message": comments,
-                    },
-                    function (response) {
-                        console.log(response);
-                    }
-                )
+                // FB.api(
+                //     "/" + response.id + "/comments",
+                //     "POST",
+                //     {
+                //         "message": comments,
+                //     },
+                //     function (response) {
+                //         console.log(response);
+                //     }
+                // )
             }
         );
     } catch (e) {
