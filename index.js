@@ -85,23 +85,35 @@ function runStepClock() {
     }, minutesLeft*60*1000);
 }
 
+// Get cityIds of cities that can attack
+function getAttackingCities() {
+    return cities
+        .filter((city) => {
+            var neighbours = city.neighbours;
+            for(var i = 0; i<neighbours.length - 1; i++) {
+                if(progress[neighbours[i]].owner != progress[city.id].owner) return true;
+            }
+            return false;
+        });
+}
+
 // Ticks the progress, updates the map image, saves progress, and upload to Facebook
 async function step() {
     var attackedCityId;
     var attackerCityId;
 
-    do {
-        const index = getRandomInt(0, cities.length-1);
-        const city = cities[index];
-        const neighbours = city.neighbours;
+    var possibleAttackingCities = getAttackingCities();
+    
+    var buff = possibleAttackingCities.filter((city) => progress[progress[city.id].owner].owner == progress[city.id].owner)
+        .filter((city) => getRandomInt(0, 1));
+    
+    possibleAttackingCities = [...possibleAttackingCities, buff];
+    var attackerCityId = possibleAttackingCities[getRandomInt(0, possibleAttackingCities.length - 1)].id;
+    var attackableCityId = citiesCache[attackerCityId].neighbours.filter((neighbourId) => progress[neighbourId].owner != progress[attackerCityId].owner);
+    var attackedCityId = attackableCityId[getRandomInt(0, attackableCityId.length-1)];
 
-        var possibleCitiesToAttack = neighbours.filter((neighbourId) => progress[neighbourId].owner != progress[city.id].owner);
-
-        if(possibleCitiesToAttack.length > 0) {
-            attackedCityId = possibleCitiesToAttack[getRandomInt(0, possibleCitiesToAttack.length-1)];
-            attackerCityId = city.id;
-        }
-    } while(attackedCityId == null || attackerCityId == null);
+    console.log("Attacking city: " + citiesCache[attackerCityId].name);
+    console.log("Attacked city: " + citiesCache[attackedCityId].name);
 
     const attacker = progress[attackerCityId].owner; // The ID of the one who attacks the city
     const attacked = progress[attackedCityId].owner; // The ID of the one who owns the city that's being attacked
