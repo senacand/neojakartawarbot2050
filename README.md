@@ -54,4 +54,4 @@ node index.js
 Silakan tuliskan masalah atau saran melalui fitur _Issues_ GitHub.
 
 ### Lisensi
-**Neo Jakarta War Bot 2050** dilisensikan dengan [GNU General Public License v3](LICENSE.md). 
+**Neo Jakarta War Bot 2050** dilisensikan dengan [GNU General Public License v3](LICENSE). 
