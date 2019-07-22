@@ -104,10 +104,9 @@ async function step() {
 
     var possibleAttackingCities = getAttackingCities();
     
-    var buff = possibleAttackingCities.filter((city) => progress[progress[city.id].owner].owner == progress[city.id].owner)
-        .filter((city) => getRandomInt(0, 1));
+    var buff = possibleAttackingCities.filter((city) => progress[progress[city.id].owner].owner == progress[city.id].owner);
     
-    possibleAttackingCities = [...possibleAttackingCities, ...buff];
+    possibleAttackingCities = [...possibleAttackingCities, ...buff, ...buff, ...buff];
     var attackerCityId = possibleAttackingCities[getRandomInt(0, possibleAttackingCities.length - 1)].id;
     var attackableCityId = citiesCache[attackerCityId].neighbours.filter((neighbourId) => progress[neighbourId].owner != progress[attackerCityId].owner);
     var attackedCityId = attackableCityId[getRandomInt(0, attackableCityId.length-1)];
