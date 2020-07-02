@@ -89,6 +89,7 @@ function runStepClock() {
 function getAttackingCities() {
     return cities
         .filter((city) => {
+            if(progress[city.id].owner == 12) return false;
             var neighbours = city.neighbours;
             for(var i = 0; i<neighbours.length - 1; i++) {
                 if(progress[neighbours[i]].owner != progress[city.id].owner) return true;
@@ -106,7 +107,7 @@ async function step() {
     
     var buff = possibleAttackingCities.filter((city) => progress[progress[city.id].owner].owner == progress[city.id].owner);
     
-    possibleAttackingCities = [...possibleAttackingCities, ...buff, ...buff, ...buff];
+    possibleAttackingCities = [...possibleAttackingCities, ...buff];
     var attackerCityId = possibleAttackingCities[getRandomInt(0, possibleAttackingCities.length - 1)].id;
     var attackableCityId = citiesCache[attackerCityId].neighbours.filter((neighbourId) => progress[neighbourId].owner != progress[attackerCityId].owner);
     var attackedCityId = attackableCityId[getRandomInt(0, attackableCityId.length-1)];
@@ -143,15 +144,15 @@ async function step() {
 
 function generateMessage(time, attackerName, cityName, previousOwner, previousOwnerDisappear) {
     const template = [
-        `${time}, Neo ${attackerName} menjajah Neo ${cityName}${(previousOwner) ? ` yang sebelumnya dijajah oleh Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah lenyap ditelan bumi. 💥` : ''}`,
+        `${time}, Neo ${attackerName} menjajah Neo ${cityName}${(previousOwner) ? ` yang sebelumnya dijajah oleh Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah lenyap ke isekai. 💥` : ''}`,
         `Pada bulan ${time}, Neo ${attackerName} berhasil mencuri${(previousOwner) ? `` : ` hati`} Neo ${cityName}${(previousOwner) ? ` dari Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} sakit hati karena NTR dan menghilang. 😭` : ''}`,
-        `${time}, Neo ${attackerName} mengambil alih Neo ${cityName}${(previousOwner) ? ` dari Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah terkalahkan dalam peperangan. 🔫` : ''}`,
-        `${time}, Neo ${attackerName} menduduki Neo ${cityName}${(previousOwner) ? ` yang sebelumnya diduduki oleh Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah terkalahkan.` : ''}`,
+        `${time}, Neo ${attackerName} mengambil alih Neo ${cityName}${(previousOwner) ? ` dari Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} telah terlempar ke isekai. 🔫` : ''}`,
+        `${time}, Neo ${attackerName} menduduki Neo ${cityName}${(previousOwner) ? ` yang sebelumnya diduduki oleh Neo ${previousOwner}.` : `.`}${(previousOwnerDisappear) ? `\nNeo ${previousOwnerDisappear} tertabrak Truck-kun dan menghilang.` : ''}`,
     ]
 
     var message = template[getRandomInt(0, template.length-1)];
     if(debug) message = "[DEBUG]\n\n" + message;
-    if(isGameEnded()) message += `\nPerang Neo Jakarta telah berakhir. ${attackerName} berhasil menguasai seluruh Neo Jakarta.`;
+    if(isGameEnded()) message += `\nNeo Jakartan Weebs Revenge telah berakhir. Neo ${attackerName} berhasil menguasai seluruh Neo Jakarta.`;
 
     return message;
 }
@@ -189,14 +190,22 @@ async function updateMap(changedCity) {
     // Write city names
     cities.forEach((city) => {
         var shouldStroke = false;
-        if(city.id == progress[city.id].owner) ctx.fillStyle = "white"
-        else if(progressCache[city.id].length > 0) {
+        if(city.id == progress[city.id].owner) {
+            ctx.fillStyle = "white"
+            ctx.strokeStyle = "black";
+            ctx.lineWidth = 5;
+            shouldStroke = true;
+        } else if(progressCache[city.id].length > 0) {
             ctx.strokeStyle = "black";
             ctx.lineWidth = 5;
             ctx.fillStyle = rgbToHex(city.color.r, city.color.g, city.color.b);
             shouldStroke = true;
+        } else {
+            ctx.fillStyle = "black";
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 5;
+            shouldStroke = true;
         }
-        else ctx.fillStyle = "black";
         ctx.font = '30px Montserrat';
         ctx.textAlign = 'center';
         const names = city.name.split(' ');
@@ -286,7 +295,7 @@ function getTime(time) {
     const year = parseInt(time/12, 10);
     const month = time%12;
 
-    return monthList[month] + ' ' + (year + 2050);
+    return monthList[month] + ' ' + (year + 2300);
 }
 
 // Performs color flood fill to canvas context on x and y
